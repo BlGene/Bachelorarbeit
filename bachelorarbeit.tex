@@ -96,13 +96,40 @@ A point $\mathbf{x}^* \in D$ is a global minimum if  $ f(\mathbf{x}^*) \leq f(\m
 \noindent
 A point $\mathbf{x}^* \in D$ is a local minimum if  in the surrounding  $ U \subseteq S$ of  $\mathbf{x}^*$ it holds that $f(\mathbf{x}^*)  \leq f(\mathbf{x})  \forall  \mathbf{x} \in U$
 
-As there are many different types of optimization algorithms only the subset of Monte Carlo probablistic global optimization algorithms will be considered. These algorithms sacrifice both evaluating the entire search space and evaluating the function exactly, in favour of a shorter runtime. In these algorithms the choice of which candidates to evaluate is made by a heuristic which makes an induction based on previous evaluations. A suitable choice of heuristic is dependent on the problem being optimized.  A futher subset of heuristics is Evolutionary Computation, this method maintains a set of possible solution candidates which it tries to refine over a number of generations.
+As there are many different types of optimization algorithms only the subset of Monte Carlo probablistic global optimization algorithms will be considered. These algorithms sacrifice both evaluating the entire search space and the necessity of evaluating the function exactly in favour of a shorter runtime. In these algorithms the choice of which candidates to evaluate is made by a heuristic which makes an induction based on previous evaluations. This makes a  suitable choice of heuristic is dependent on the problem being optimized. Evolutionary Computation repersents a subset of heuristic based approaches, in which a set of possible solution candidates is maintained which the algorithm tries to refine over a number of generations. In the following sections these
+algorithms are introduced.
+
+\section{Evolutionary Algorithms}
+
+\section{Swarm Intelligence}
+
+\section{Evolutionary Computation}
+
+\chapter{Implementation}
+
+The application of optimization directly to the Rydber experiment posed a number of difficulties in that the parameters for optimization on the physical experiment were very different from those which numerical optimization is usually applied to, while it is possible to evaluate a numerical function or simulation very quickly and or in parrael there was a strong constraint on the number of evaluations of solution candidates. In order to still be able to achieve convergence of the optimization algorithm this required a reduced dimensionality of the problem that we were attempting to solve. In addition to this physical measurements are also affected by noise. These conditions were used to choose an appropriate algorithm that could be applied the the experiment.
+
+\section{Test Function}
+In order to evaluate the different algorithms that are avaliable a mathematical test problem was formulated. This problem could then be evaluated by computer allowing for the large number of evaluations needed to compare the algorithm with different paramaters and compare the results to other algorithms. In order to make this comparison meaningfull one needs to choose a test problem that matches the actual experiment as closley as possible, to do this a $n$ dimensional Gaussian was choosen.
+
+To further increase similarity with the experiment three sources of noise were added: measurement noise affecting the amplitude of the function($\sigma_a$), backgorund noise added to the fucntion($\sigma_b$) and noise in the parameters that were passed to the function$\sigma_p$. 
+
+\[g(x_i,\sigma) = e^{\frac{(x_i^*-x_i)^2}{2\sigma}}\]
+\[G(\mathbf{x},\sigma) = \prod_{i=1}^n g(x_i, \sigma)\]
+\[f(\mathbf{x}) =  \mathcal{N}(1,\sigma_a) * \prod_{i=1}^n g(\mathcal{N}(x_i,\sigma_p), \sigma) + \mathcal{N}(0,\sigma_b) \]
+
+As we know only little about the problem landscape of the actual experimental paramters that we are going to optimize this test problem represents a best guess, strictly speaking we cannot induce the suitability to application in the experiment of the algorithm choosen according this test function, however it will be attempted as notheless as it is the best starting point avaliable.
+
+
+\section{Comparison of Algorithms}
+
 
 
 
 \newpage
 \includegraphics{Images/taxonomy_v2.pdf}
 
+\section{Appendix}
 
 
 \end{document}
