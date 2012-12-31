@@ -3,6 +3,7 @@
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{amssymb}
+\usepackage{mathtools} 
 
 \geometry{
   includeheadfoot,
@@ -114,17 +115,94 @@ Due to the kind of problems to which optimization is to be applied to only the s
 
 \section{Evolutionary Algorithms}
 
-Evolutionary Computation repersents a subset of heuristic based approaches in which a set of possible solution candidates is maintained which the algorithm tries to refine over a number of generations. In the following sections we will introduce the differnt categories of algorithms used as well as the specific implementations of algorithms from these categories.
+Evolutionary Computation repersents a subset of heuristic based approaches in which a set of possible solution candidates is maintained which the algorithm tries to refine over a number of generations. In the following sections we will introduce the differnt categories of algorithms used as well as the specific implementations of algorithms from these categories. 
 
+
+\section{Genetic Algorithms}
+
+First we start with a simple genetic algorithm that will serve as a template for the algorithms to follow. In this algorithm we will encounter the common components of evolutionary algorithms, which are seen in the following block diagram. 
+
+
+\begin{figure}[htb]
+\centering
 \includegraphics{Images/evolution_v2.pdf}
+\caption{Block diagram of an Optimization Algorithm \cite{weise}}
+\label{fig: genetic algorithms}
+\end{figure}
 
-\subsection{Population Size}
-\subsection{Exploration//Exploitation}
+\subsection{Generation}
+In order to start an opimization process one needs an intial population, as optimization is usually done over a restriced search space, one tries to  choose an initial population of candidates one tries to sample the search space as even as possible. This decreases the chances of missing the location of the global minimum as well as avoids biasing the optimization to any particular region. This is usually achieved by using a uniform random distribution. An alternative is to use quasirandom sampling based on halton sequences which are more equidistributed. This reduces the chances of evaluating candidates that are very similiar at the cost of exploring the whole solution space.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=16cm]{Images/sampling.png}
+\caption{Three different sampling methods. The upper plot shows the similar looking positions sampled on a 1x1 square. The lower plot shows the relative distance of each point to all of its neighbours in a .2 radius. \cite{hayes} }
+\label{fig: sampling}
+\end{figure}
+
+\subsection{Evaluation}
+Following the initial population choice these candidates are evaluated. In our case this is the most time consuming part of the optimization process as it requires an completion of the experimental cycle, thus there is not a lot that can be done to optimize this step.
+
+\subsection{Selection}
+
+Once the population has been evaluated the better candidates need to be selected as parents of the following generation. The aim here is to have the choice of parents be influenced by the fitness but not doing this too strongly as it would decrease the diversity of the population.
+
+
+\subsection{Variation}
+
+Given two different parents one can create a child candidate by mixing the paramter vectors of the two parents. This process is called a crossover operation, the most basic of which is the one point crossover where every value up to a certain index is copied from one parent, and the following entries are copied from the other parent. Another way of varying a child  is through "mutation" that is performed by adding gaussian nosie to the element of a child vector.
+
+
+\subsection{Exploration vs. Exploitation}
+
+One of the treadeoffs inherint in global optimization is the choice between exploration and explotation. Exploration is the unbiased search for solution candidates in the whole search space whereas exploitation consists of trying to follow the lead of good solution candidates that have already been found. When the risk of an algorithm exploring too much is greatly increased runtime it is more likely to find the global optimum conversley an algorithm that exploits good solution candidates too strongly will follow inital leads and get stuck in a local minimum. There are a number of ways that this behaviour can be controled in during the selection and variation stages of an algorithm. The population size chosen also has a strong effect.
+
+
+\section{Differential Evolution}
+
+Differential evolution is an optimization algorithm belonging to the Evolution Strategy family of optimization algorithms developed by Storn and Price \cite{storn}. It destinguishes itself by a special kind of three parent "differential" crossover variation that follows the form:
+
+\[ \mathbf{v}_{i} = \mathbf{x}_{j} + F \cdot ( \mathbf{x}_{k} -  \mathbf{x}_{l} ) \]
+
+Here $j,k,l \in \{1,2,\dots,NP\} / \{i\}$ are random vextor indexes anf $F \in [0,2]$ is a weighting factor wich controls the weight of the differental varation. However this new vector is not used directly, a binomial crossover witht the intial vector $\mathbf{x_i}$ is performed, in which each element is chosen as the result of an independent binomial experiment.
+
+\newcommand*{\bfrac}[2]{\genfrac{}{}{0pt}{}{#1}{#2}}
+
+\[ \mathbf{x}'_{i,m} = \left\{ \bfrac{ \mathbf{v}_{i,m} \; \text{for}\; (r_m \le CR) \lor (r_i = j) }{ \mathbf{x}_{i,m} \;\text{for}\; (r_m > CR) \land (j \ne r_i) } \right. \]
+\[ \forall m \in \{1,2,\dots,D\} \]
+
+Here $r_i$ is a random integer index chosen once for each vector and $r_m \in [0,1]$ in a random number chosen once for each vector element. This results in at least one component of the new vector coming from the varied one. The resulting vector $\mathbf{x}'$ is then kept if it has a better fitness values than its predecessor $\mathbf{x}$.
+
+Differential evolution algorithms exist in a number of different variations that are named using the notation
+
+\[DE/x/y/x\]
+
+x represnets the way in which the population should be varied. It can stand for "rand" or "best". With"rand" a randomly chosen vector is varied, as was previously explained and with "best" the best vector of the population is varied.
+
+y is the number of difference vectors used, currently one.
+
+z specifies the crossover scheme used, this can be "bin" for binomial crossover or "exp" for exponential crossover.
+
+Using this notation the algorithm we have described would be represented by
+
+\[DE/rand/1/bin\]
+
 
 
 \section{Swarm Intelligence}
 
-\section{Evolutionary Computation}
+Particle swarm optimization was initially developed by Kennedy and Eberhart to model the beahviour of a flock of birds. It was then noticed that the model could could be applied to do black-box optimization. In this method each particle has a position $\mathbf{x}$ and a velocity $\mathbf{v}$. In each iteration of the optimization the velocity is computed by the formula:
+
+\[ \mathbf{v} = \omega \mathbf{v} + \phi_p r_p (\mathbf{p} - \mathbf{x}) + \phi_g r_g (\mathbf{g} - \mathbf{x}) \]
+
+Where the parameter $\omega \in \mathbb{R}$ is the inertia weight. $\mathbf{p}$ and $\mathbf{g}$ are the best positions discovered by the particle and the swarm respectivley. The attraction to these positions is controlled using the paramters $\phi_p, \phi_g$ and varied stochastically using $r_p,r_g = U(O,1)$. With each generation the velocity is applied to the position
+
+\[\mathbf{x}' = \mathbf{x} + \mathbf{x} \mathbf{v} \]
+
+This results in the swarm ideally converging on the global optimum position.
+
+
+
 
 \chapter{Implementation}
 
@@ -144,13 +222,149 @@ As we know only little about the problem landscape of the actual experimental pa
 
 \section{Comparison of Algorithms}
 
+Algorithms from different sources were used in the comparison. Two different optimization libraries were used, first the  "Parallel Global Multiobjective Optimizer"\cite{pygmo} of which the Python interface is named PyGMO and secondly the "inspyred"\cite{inspyred} library. Many optimization routines are published only as Maltab code, in these cases the algorithms were applied the the same test problem using Matlab.
 
+In order to compare the algorithms each one was run on to the test problem described 50 times, being allowed to do 900 evaluations of the test function. The results werge then graphen. 
+
+
+
+The algorithms were grouped into three categories and compared with each other. The comparison was based on repeatedly applying the optimization algorithm to the problem 50 times. Four different statistics are shown 
+
+\begin{description}
+\item[best] The median, over all runs, of the best value of each run found so far.
+\item[N$<$-1] The fraction of algorithms have found a value less than negative one.
+\item[Distance] The distance from the global optimum for each evaluation.
+\item[Std. Dev] The standard deviation of the best values found so far.
+
+\end{description}
+
+Ideally we a looking for an algorithm that will converge often in a relativley short ammount of time, as seen in the "N$<$-1" plot. Additionally this covergence should be due to the fact that the algorithm is converging on the global optimum not because of the gaussian noise, as seen in the "Distance" plot. Then upon convering the algorithm should find a value lower than -1 due to the amplitude and background noise, as seen in the "Best" plot. The plots are shown in log-lin scaling because the convergence.
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.9\linewidth]{Images/3D_EA_hard.pdf}
+\vspace{0.5cm}
+\includegraphics[width=0.9\linewidth]{Images/3D_Swarm_hard.pdf}
+\caption{Evolutionary Algorithms applied to 3 Dimensional Gaussian}
+\label{fig: 3d_ea_hard}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.9\linewidth]{Images/4D_EA_hard.pdf}
+\vspace{0.5cm}
+\includegraphics[width=0.9\linewidth]{Images/4D_Swarm_hard.pdf}
+\caption{Swarm Algorithms applied to 4 Dimensional Gaussian}
+\label{fig: best hard}
+\end{figure}
+
+
+
+other tests:
+5d and 6d(stops working)
+de all variants (3D)
+mde vary parameter on (4D)
+
+
+\chapter{Appendix}
+
+\section{List of Optimization Algorithms Considered}
+
+A list of all the algorithms that were applied to the test problem, not all of these have been included in the comparison graphs they performed badly.
+
+\begin{table}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        Algorithm Name                              & Library &   Reference   \\
+        \hline
+        Differential Evolution (DE)                 & PyGMO, inspyred  &      \\ 
+        Self-adaptive DE (jDE)                      & PyGMO   &               \\ 
+        DE with p-best crossover (mde-pbx)          & PyGMO   &               \\ 
+        Simple Genetic Algorithm (SGA)              & Matlab  &
+        \cite{matlab-toolbox}\\ 
+        Estimation of Distribution (EDA)            & inspyred &              \\ 
+        Particle Swarm Optimization (PSO)           & PyGMO, inspyred, Matlab&
+        \cite{matlab-pso}\\ 
+        Bee Colony Optimization                     & PyGMO  &                \\ 
+        Improved Harmony Search (IHS)               & PyGMO  &                \\ 
+        Pattern Search                              & Matlab  &
+        \cite{matlab-toolbox}\\ 
+        Simulated Annealing (SA)                    & PyGMO, inspyred, Matlab&
+        \cite{matlab-toolbox}\\ 
+        
+        Multi-Lever Coordinate Search (LCS)         & Matlab  &               \\ 
+        Local Uni-modal Sampling (LUS)              & Matlab   &
+        \cite{matlab-lus}\\ 
+        Covariance Matrix Adaptation Evolution Strategy (CMA-ES) & Matlab&    \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Classification of Optimization Algorithms}
+
+\includegraphics{Images/taxonomy_v2.pdf}
 
 
 \newpage
-\includegraphics{Images/taxonomy_v2.pdf}
+\begin{thebibliography}{9}
 
-\section{Appendix}
+\bibitem{weise}
+  Thomas Weise,
+  \emph{Global Optimization Algorithms, Theory and Application}.
+  2nd Edition,
+  2009
+  http://it-weise.de.
+
+\bibitem{hayes}
+  Brian Hayes,
+  \emph{A slight discrepancy}.
+  http://bit-player.org/2011/a-slight-discrepancy
+  http://devio.us/~tripzilch/raindrops/
+  2011.
+  
+\bibitem{storn}
+    Rainer Storn and Kenneth Price,
+    \emph{Differential Evolution - A Simple and Efficent Heuristic for Global Optimization over Continous Spaces}.
+    Journal of Global Optimization,
+    1997
+    
+\bibitem{pygmo}
+    Izzo, D.
+    \emph{PyGMO and PyKEP: Open Source Tools for Massively Parallel Optimization in Astrodynamics}
+    International Conference on Astrodynamics Tools and Techniques,
+    2012. 
+
+\bibitem{inspyred}    
+    Aaron Lee Garrett
+    \emph{inspyred: Bio-inspired Algorithms in Python}
+    inspyred 1.0
+    http://inspyred.github.com/
+    2012
+    
+\bibitem{matlab-toolbox}
+  Thomas Coleman, Mary Ann Branch and Andy Grace,
+  \emph{Optimization Toolbox for use with Matlab User's Guide}
+  Version 2,
+  2002
+  The Math Works, Inc.
+  24 Prime Park Way, Natick, MA 01760-1500.
+  
+\bibitem{matlab-pso}
+  M. Clerc, J. Kennedy
+  \emph{"The particle swarm - explosion, stability, and convergence in a multidimensional complex space}
+  Feb 2002
+  Evolutionary Computation, IEEE Transactions on , vol.6, no.1, pp.58-73,
+  doi: 10.1109/4235.985692
+
+\bibitem{matlab-lus}
+  M.E.H. Pedersen,
+  \emph{Tuning \& Simplifying Heuristical Optimization}
+  2010.  
+  PhD Thesis
+  University of Southampton
+
+\end{thebibliography}
 
 
 \end{document}
