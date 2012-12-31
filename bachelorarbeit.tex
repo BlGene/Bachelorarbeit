@@ -72,7 +72,7 @@ Introduction introduction introduction
 
 \chapter{Concept}
 
-The aim of this thesis is the application of optimization methods to a Rydberg atom experiment. In the course of making one measurement several steps have to be completed sequentially. These start with collecting Rubidium atoms into a MOT, pre-cooling then and then loading them into a diplote trap where they are exited into Rydberg atoms. After this has been done the atoms can be imaged by a camera system. These steps form a cycle that is repeated every few seconds with variation of parameters in order to make measurements of the change in beahaviour of the Rydberga atoms dependends on the varied parameters. While many properties of the experimental setup are physically fixed, such as the position of the lasers, a relativley large number (77) that can be controlled by the software controlling the experiment, such as the timing of activating these lasers. The aim of this project is to add information feedback to this cycle, so that the experiment can choose new experimental parameters based the results of previous evaluations. The scematic for this is shown in figure 1.1
+The aim of this thesis is the application of optimization methods to a Rydberg atom experiment. In the course of making one measurement several steps have to be completed sequentially. These start with collecting Rubidium atoms into a MOT, pre-cooling then and then loading them into a dipole trap where they are exited into Rydberg atoms. After this has been done the atoms can be imaged by a camera system. These steps form a cycle that is repeated every few seconds with variation of parameters in order to make measurements of the change in behavior of the Rydberg atoms dependends on the varied parameters. While many properties of the experimental setup are physically fixed, such as the position of the lasers, a relatively large number (77) that can be controlled by the software controlling the experiment, such as the timing of activating these lasers. The aim of this project is to add information feedback to this cycle, so that the experiment can choose new experimental parameters based the results of previous evaluations. The schematic for this is shown in figure 1.1
 
 \begin{figure}[htb]
 \centering
@@ -82,9 +82,9 @@ The aim of this thesis is the application of optimization methods to a Rydberg a
 \end{figure}
 
 
-Due to the discrete nature of experimental cycle evaluations and the large number of paramters as well as considerable measurement noise an opimization approach was choosen that generates and evaluates new experimental parameters. Using one can define the goal of the optimization as a function of several of the measurement results calculated by the analysis step.
+Due to the discrete nature of experimental cycle evaluations and the large number of parameters as well as considerable measurement noise an optimization approach was chosen that generates and evaluates new experimental parameters. Using one can define the goal of the optimization as a function of several of the measurement results calculated by the analysis step.
 
-Of particular interest is the control of experimental electrodes sourrounding the Rydberg atoms. One of the experimental goal is creating minimal electric fields as the predictions that are made assume a field-free environment. Additionaly it is important to generate a homogeneous filed as this prevents position dependent energies. When working with Rydberg atoms one mostly want to increase the principle quantum number $n$ in order to scale with it the physical effects one is trying to measure, however the polarizability of Rydberga atoms scales with $n^7$ requiring fine control over the electric field if one wants to work with larger Rydberg atoms.
+Of particular interest is the control of experimental electrodes surrounding the Rydberg atoms. One of the experimental goal is creating minimal electric fields as the predictions that are made assume a field-free environment. Additionally it is important to generate a homogeneous filed as this prevents position dependent energies. When working with Rydberg atoms one mostly want to increase the principle quantum number $n$ in order to scale with it the physical effects one is trying to measure, however the polarizability of Rydberg atoms scales with $n^7$ requiring fine control over the electric field if one wants to work with larger Rydberg atoms.
 
 
 
@@ -108,14 +108,14 @@ A point $\mathbf{x}^* \in D$ is a local minimum if  in the surrounding  $ U \sub
 
 
 \section{Background: Why look at multiple algorithms?}
-There are a large number of optimization algorithms that have been developed in order to solve different problems. The key to applying optimization algorithms then is to find one suitable to solving kind of problems one is working with. Abstractley this is the converse to the No Free Lunch Theorem which states that the average performance of an optimizationa algorithms, when applied to the set of all optimization problems,  does not outperforom any other optimization algorithm or random walk. An algorithm is thus only, compartivley, suitable if it is able to utilize some form of problem specific information coupling the choice of algorithm to the problem at hand.
+There are a large number of optimization algorithms that have been developed in order to solve different problems. The key to applying optimization algorithms then is to find one suitable to solving kind of problems one is working with. Abstractly this is the converse to the No Free Lunch Theorem which states that the average performance of an optimization algorithms, when applied to the set of all optimization problems,  does not outperform any other optimization algorithm or random walk. An algorithm is thus only, comparatively, suitable if it is able to utilize some form of problem specific information coupling the choice of algorithm to the problem at hand.
 
-Due to the kind of problems to which optimization is to be applied to only the subset of Monte Carlo probablistic global optimization algorithms will be considered. These algorithms sacrifice both evaluating the entire search space and the necessity of evaluating the function exactly in favour of a shorter runtime. In these algorithms the choice of which candidates to evaluate is made by a heuristic which makes an induction based on previous evaluations. It is in this heuristic that is represents the problem specific information of the optimization algorithm.
+Due to the kind of problems to which optimization is to be applied to only the subset of Monte Carlo probabilistic global optimization algorithms will be considered. These algorithms sacrifice both evaluating the entire search space and the necessity of evaluating the function exactly in favor of a shorter run time. In these algorithms the choice of which candidates to evaluate is made by a heuristic which makes an induction based on previous evaluations. It is in this heuristic that is represents the problem specific information of the optimization algorithm.
 
 
 \section{Evolutionary Algorithms}
 
-Evolutionary Computation repersents a subset of heuristic based approaches in which a set of possible solution candidates is maintained which the algorithm tries to refine over a number of generations. In the following sections we will introduce the differnt categories of algorithms used as well as the specific implementations of algorithms from these categories. 
+Evolutionary Computation represents a subset of heuristic based approaches in which a set of possible solution candidates is maintained which the algorithm tries to refine over a number of generations. In the following sections we will introduce the different categories of algorithms used as well as the specific implementations of algorithms from these categories. 
 
 
 \section{Genetic Algorithms}
@@ -131,12 +131,12 @@ First we start with a simple genetic algorithm that will serve as a template for
 \end{figure}
 
 \subsection{Generation}
-In order to start an opimization process one needs an intial population, as optimization is usually done over a restriced search space, one tries to  choose an initial population of candidates one tries to sample the search space as even as possible. This decreases the chances of missing the location of the global minimum as well as avoids biasing the optimization to any particular region. This is usually achieved by using a uniform random distribution. An alternative is to use quasirandom sampling based on halton sequences which are more equidistributed. This reduces the chances of evaluating candidates that are very similiar at the cost of exploring the whole solution space.
+In order to start an optimization process one needs an initial population, as optimization is usually done over a restricted search space, one tries to  choose an initial population of candidates one tries to sample the search space as even as possible. This decreases the chances of missing the location of the global minimum as well as avoids biasing the optimization to any particular region. This is usually achieved by using a uniform random distribution. An alternative is to use quasi-random sampling based on Halton sequences which are more equidistributed. This reduces the chances of evaluating candidates that are very similar at the cost of exploring the whole solution space.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=16cm]{Images/sampling.png}
-\caption{Three different sampling methods. The upper plot shows the similar looking positions sampled on a 1x1 square. The lower plot shows the relative distance of each point to all of its neighbours in a .2 radius. \cite{hayes} }
+\caption{Three different sampling methods. The upper plot shows the similar looking positions sampled on a 1x1 square. The lower plot shows the relative distance of each point to all of its neighbors in a .2 radius. \cite{hayes} }
 \label{fig: sampling}
 \end{figure}
 
@@ -150,21 +150,21 @@ Once the population has been evaluated the better candidates need to be selected
 
 \subsection{Variation}
 
-Given two different parents one can create a child candidate by mixing the paramter vectors of the two parents. This process is called a crossover operation, the most basic of which is the one point crossover where every value up to a certain index is copied from one parent, and the following entries are copied from the other parent. Another way of varying a child  is through "mutation" that is performed by adding gaussian nosie to the element of a child vector.
+Given two different parents one can create a child candidate by mixing the parameter vectors of the two parents. This process is called a crossover operation, the most basic of which is the one point crossover where every value up to a certain index is copied from one parent, and the following entries are copied from the other parent. Another way of varying a child  is through "mutation" that is performed by adding Gaussian noise to the element of a child vector.
 
 
 \subsection{Exploration vs. Exploitation}
 
-One of the treadeoffs inherint in global optimization is the choice between exploration and explotation. Exploration is the unbiased search for solution candidates in the whole search space whereas exploitation consists of trying to follow the lead of good solution candidates that have already been found. When the risk of an algorithm exploring too much is greatly increased runtime it is more likely to find the global optimum conversley an algorithm that exploits good solution candidates too strongly will follow inital leads and get stuck in a local minimum. There are a number of ways that this behaviour can be controled in during the selection and variation stages of an algorithm. The population size chosen also has a strong effect.
+One of the treadeoffs inherent in global optimization is the choice between exploration and exploitation. Exploration is the unbiased search for solution candidates in the whole search space whereas exploitation consists of trying to follow the lead of good solution candidates that have already been found. When the risk of an algorithm exploring too much is greatly increased run time it is more likely to find the global optimum conversely an algorithm that exploits good solution candidates too strongly will follow initial leads and get stuck in a local minimum. There are a number of ways that this behavior can be controlled in during the selection and variation stages of an algorithm. The population size chosen also has a strong effect.
 
 
 \section{Differential Evolution}
 
-Differential evolution is an optimization algorithm belonging to the Evolution Strategy family of optimization algorithms developed by Storn and Price \cite{storn}. It destinguishes itself by a special kind of three parent "differential" crossover variation that follows the form:
+Differential evolution is an optimization algorithm belonging to the Evolution Strategy family of optimization algorithms developed by Storn and Price \cite{storn}. It distinguishes itself by a special kind of three parent "differential" crossover variation that follows the form:
 
 \[ \mathbf{v}_{i} = \mathbf{x}_{j} + F \cdot ( \mathbf{x}_{k} -  \mathbf{x}_{l} ) \]
 
-Here $j,k,l \in \{1,2,\dots,NP\} / \{i\}$ are random vextor indexes anf $F \in [0,2]$ is a weighting factor wich controls the weight of the differental varation. However this new vector is not used directly, a binomial crossover witht the intial vector $\mathbf{x_i}$ is performed, in which each element is chosen as the result of an independent binomial experiment.
+Here $j,k,l \in \{1,2,\dots,NP\} / \{i\}$ are random vector indexes and $F \in [0,2]$ is a weighting factor which controls the weight of the differential variation. However this new vector is not used directly, a binomial crossover with the initial vector $\mathbf{x_i}$ is performed, in which each element is chosen as the result of an independent binomial experiment.
 
 \newcommand*{\bfrac}[2]{\genfrac{}{}{0pt}{}{#1}{#2}}
 
@@ -177,7 +177,7 @@ Differential evolution algorithms exist in a number of different variations that
 
 \[DE/x/y/x\]
 
-x represnets the way in which the population should be varied. It can stand for "rand" or "best". With"rand" a randomly chosen vector is varied, as was previously explained and with "best" the best vector of the population is varied.
+x represents the way in which the population should be varied. It can stand for "rand" or "best". With"rand" a randomly chosen vector is varied, as was previously explained and with "best" the best vector of the population is varied.
 
 y is the number of difference vectors used, currently one.
 
@@ -191,11 +191,11 @@ Using this notation the algorithm we have described would be represented by
 
 \section{Swarm Intelligence}
 
-Particle swarm optimization was initially developed by Kennedy and Eberhart to model the beahviour of a flock of birds. It was then noticed that the model could could be applied to do black-box optimization. In this method each particle has a position $\mathbf{x}$ and a velocity $\mathbf{v}$. In each iteration of the optimization the velocity is computed by the formula:
+Particle swarm optimization was initially developed by Kennedy and Eberhart to model the behavior of a flock of birds. It was then noticed that the model could could be applied to do black-box optimization. In this method each particle has a position $\mathbf{x}$ and a velocity $\mathbf{v}$. In each iteration of the optimization the velocity is computed by the formula:
 
 \[ \mathbf{v} = \omega \mathbf{v} + \phi_p r_p (\mathbf{p} - \mathbf{x}) + \phi_g r_g (\mathbf{g} - \mathbf{x}) \]
 
-Where the parameter $\omega \in \mathbb{R}$ is the inertia weight. $\mathbf{p}$ and $\mathbf{g}$ are the best positions discovered by the particle and the swarm respectivley. The attraction to these positions is controlled using the paramters $\phi_p, \phi_g$ and varied stochastically using $r_p,r_g = U(O,1)$. With each generation the velocity is applied to the position
+Where the parameter $\omega \in \mathbb{R}$ is the inertia weight. $\mathbf{p}$ and $\mathbf{g}$ are the best positions discovered by the particle and the swarm respectively. The attraction to these positions is controlled using the parameters $\phi_p, \phi_g$ and varied stochastically using $r_p,r_g = U(O,1)$. With each generation the velocity is applied to the position
 
 \[\mathbf{x}' = \mathbf{x} + \mathbf{x} \mathbf{v} \]
 
@@ -206,43 +206,43 @@ This results in the swarm ideally converging on the global optimum position.
 
 \chapter{Implementation}
 
-The application of optimization directly to the Rydber experiment posed a number of difficulties in that the parameters for optimization on the physical experiment were very different from those which numerical optimization is usually applied to, while it is possible to evaluate a numerical function or simulation very quickly and or in parrael there was a strong constraint on the number of evaluations of solution candidates. In order to still be able to achieve convergence of the optimization algorithm this required a reduced dimensionality of the problem that we were attempting to solve. In addition to this physical measurements are also affected by noise. These conditions were used to choose an appropriate algorithm that could be applied the the experiment.
+The application of optimization directly to the Rydberg experiment posed a number of difficulties in that the parameters for optimization on the physical experiment were very different from those which numerical optimization is usually applied to, while it is possible to evaluate a numerical function or simulation very quickly and or in parallel there was a strong constraint on the number of evaluations of solution candidates. In order to still be able to achieve convergence of the optimization algorithm this required a reduced dimensionality of the problem that we were attempting to solve. In addition to this physical measurements are also affected by noise. These conditions were used to choose an appropriate algorithm that could be applied the the experiment.
 
 \section{Test Function}
-In order to evaluate the different algorithms that are avaliable a mathematical test problem was formulated. This problem could then be evaluated by computer allowing for the large number of evaluations needed to compare the algorithm with different paramaters and compare the results to other algorithms. In order to make this comparison meaningfull one needs to choose a test problem that matches the actual experiment as closley as possible, to do this a $n$ dimensional Gaussian was choosen.
+In order to evaluate the different algorithms that are available a mathematical test problem was formulated. This problem could then be evaluated by computer allowing for the large number of evaluations needed to compare the algorithm with different parameters and compare the results to other algorithms. In order to make this comparison meaningful one needs to choose a test problem that matches the actual experiment as closely as possible, to do this a $n$ dimensional Gaussian was chosen.
 
-To further increase similarity with the experiment three sources of noise were added: measurement noise affecting the amplitude of the function($\sigma_a$), backgorund noise added to the fucntion($\sigma_b$) and noise in the parameters/position that were passed to the function $\sigma_p$. 
+To further increase similarity with the experiment three sources of noise were added: measurement noise affecting the amplitude of the function($\sigma_a$), background noise added to the function($\sigma_b$) and noise in the parameters/position that were passed to the function $\sigma_p$. 
 
 \[g(x_i,\sigma) = e^{\frac{(x_i^*-x_i)^2}{2\sigma}}\]
 \[G(\mathbf{x},\sigma) = \prod_{i=1}^n g(x_i, \sigma)\]
 \[f(\mathbf{x}) =  \mathcal{N}(1,\sigma_a) * \prod_{i=1}^n g(\mathcal{N}(x_i,\sigma_p), \sigma) + \mathcal{N}(0,\sigma_b) \]
 
-As we know only little about the problem landscape of the actual experimental paramters that we are going to optimize this test problem represents a best guess, strictly speaking we cannot induce the suitability to application in the experiment of the algorithm choosen according this test function, however it will be attempted as notheless as it is the best starting point avaliable.
+As we know only little about the problem landscape of the actual experimental parameters that we are going to optimize this test problem represents a best guess, strictly speaking we cannot induce the suitability to application in the experiment of the algorithm chosen according this test function, however it will be attempted as nonetheless as it is the best starting point available.
 
 
 \section{Comparison of Algorithms}
 
-Algorithms from different sources were used in the comparison. Two different optimization libraries were used, first the  "Parallel Global Multiobjective Optimizer"\cite{pygmo} of which the Python interface is named PyGMO and secondly the "inspyred"\cite{inspyred} library. Many optimization routines are published only as Maltab code, in these cases the algorithms were applied the the same test problem using Matlab.
+Algorithms from different sources were used in the comparison. Two different optimization libraries were used, first the  "Parallel Global Multiobjective Optimizer"\cite{pygmo} of which the Python interface is named PyGMO and secondly the "inspyred"\cite{inspyred} library. Many optimization routines are published only as Matlab code, in these cases the algorithms were applied the the same test problem using Matlab.
 
-In order to compare the algorithms they were all repeatedly applied to the test function using the paraters show in \ref{sec:param}. The algorithms were run independently 100 times and the following statistics were collected to evaluate the algorithm performance.
+In order to compare the algorithms they were all repeatedly applied to the test function using the parameters show in \ref{sec:param}. The algorithms were run independently 100 times and the following statistics were collected to evaluate the algorithm performance.
 
 \begin{description}
 \item[Best] The median, over all runs, of the best value of each run found so far.
 \item[N$<$-1] The fraction of algorithms that have found a value less than negative one.
-\item[Distance] The median over all runs, of the squared distance, in paramter space,  from the global optimum.
-\item[N$<$.015] The fraction of algorithms that have median squared distance valuess less that $0.015$.
+\item[Distance] The median over all runs, of the squared distance, in parameter space,  from the global optimum.
+\item[N$<$.015] The fraction of algorithms that have median squared distance values less that $0.015$.
 \end{description}
 
-The best value returned so far is the most direct way to measure the performance of the algorithm, for this value, as well as the distance, the median was chosen because it is less suceptible to outliers than the average. In to see how well the population of algorithms we wanted to have a sucess rate, as returning a value less than -1 was entierley due to noise we chose to count the number of algorithms that had achived this.
+The best value returned so far is the most direct way to measure the performance of the algorithm, for this value, as well as the distance, the median was chosen because it is less susceptible to outliers than the average. In to see how well the population of algorithms we wanted to have a success rate, as returning a value less than -1 was entirely due to noise we chose to count the number of algorithms that had achieved this.
 
-The problem with looking at the fitness value returned is that since it is influenced by noise we may not be finding the actual minimum of the the problem that we are trying to optimize, merley lucky values. To prevent this one can look at the distance from the optimum in corrdinate space. First we consider the median, over all runs, distance in corrdinate space, depsite having considerable jitter this variable still gives a good indication of population state. The jitter results from the median being taken "randomly" from the population, meaing the population diversity is present as well as the diversity between the different runs. A  more direct way is counting the number of algorithms where the paramter is within some distance of the optimum. This is done by the $N<.015$ statistic.
+The problem with looking at the fitness value returned is that since it is influenced by noise we may not be finding the actual minimum of the the problem that we are trying to optimize, merely lucky values. To prevent this one can look at the distance from the optimum in coordinate space. First we consider the median, over all runs, distance in coordinate space, despite having considerable jitter this variable still gives a good indication of population state. The jitter results from the median being taken "randomly" from the population, meaning the population diversity is present as well as the diversity between the different runs. A  more direct way is counting the number of algorithms where the parameter is within some distance of the optimum. This is done by the $N<.015$ statistic.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.9\linewidth]{Images/3D_EA_hard.pdf}
 \vspace{0.5cm}
 \includegraphics[width=0.9\linewidth]{Images/3D_Swarm_hard.pdf}
-\caption{Selection of optimization algorithms applied to 3 dimensional test problem. Evolution Strategy and Swarm type algorithms shown on top and bottom respectivley.}
+\caption{Selection of optimization algorithms applied to 3 dimensional test problem. Evolution Strategy and Swarm type algorithms shown on top and bottom respectively.}
 \label{fig: 3d_hard}
 \end{figure}
 
@@ -251,33 +251,33 @@ The problem with looking at the fitness value returned is that since it is influ
 \includegraphics[width=0.9\linewidth]{Images/4D_EA_hard.pdf}
 \vspace{0.5cm}
 \includegraphics[width=0.9\linewidth]{Images/4D_Swarm_hard.pdf}
-\caption{Selection of optimization algorithms applied to 4 dimensional test problem.Evolution Strategy and Swarm type algorithms shown on top and bottom respectivley.}
+\caption{Selection of optimization algorithms applied to 4 dimensional test problem.Evolution Strategy and Swarm type algorithms shown on top and bottom respectively.}
 \label{fig: 4d_hard}
 \end{figure}
 
 \subsection{Why choose DEA?}
-In these the three dimensional calse\ref{fig: 3d_hard} we see that all algorithms converge within the 900 executions that were given. Of the Swarm type algorithms all algorithms have similar performance with the PyGMO PSO algorithm performing best and Bee Colony Optimization performing worst, interstingly the Bee Colony Optimization does not seem to create any kind of population convergence when looking at the distance statistic. Evolution Strategy type algorithms performed better than Swarm type algorithms. Within this group the inspyred DEA and PyGMO MDE-PBX algorithms performed better than their peers with the inspyred DEA algorithm converging more quickly by about 100 executions. Interestingly N$<$.015 statistic of the DEA algorithm seems to level off at 0.6, something that does not happen with MDE-PBX, indicating that some population diversity always remains with this algorithm.
+In these the three dimensional case\ref{fig: 3d_hard} we see that all algorithms converge within the 900 executions that were given. Of the Swarm type algorithms all algorithms have similar performance with the PyGMO PSO algorithm performing best and Bee Colony Optimization performing worst, inters tingly the Bee Colony Optimization does not seem to create any kind of population convergence when looking at the distance statistic. Evolution Strategy type algorithms performed better than Swarm type algorithms. Within this group the inspyred DEA and PyGMO MDE-PBX algorithms performed better than their peers with the inspyred DEA algorithm converging more quickly by about 100 executions. Interestingly N$<$.015 statistic of the DEA algorithm seems to level off at 0.6, something that does not happen with MDE-PBX, indicating that some population diversity always remains with this algorithm.
 
-As all algorithms converged the optimization algorithms were applied to a 4 dimensional test problem \ref{fig: 4d_hard}. The difficulty of the problem increases substantially with each dimension, in a nonlinear fasion, even when one considers only the relative volumes of the seach space and test problem gaussians. Corresponding to this increase in difficulty the number of function evaluations were increased.
+As all algorithms converged the optimization algorithms were applied to a 4 dimensional test problem \ref{fig: 4d_hard}. The difficulty of the problem increases substantially with each dimension, in a nonlinear fashion, even when one considers only the relative volumes of the search space and test problem Gaussian. Corresponding to this increase in difficulty the number of function evaluations were increased.
 
-For this problem the PyGMO DE, jDE and inspyred PSO algorithms essentially stalled not effecively optimizing. The inspyred DEA and PyGMO MDE-PBX algorithms again performed better than their peers. Interstingly while the inspyred DEA algorithm initially converged than the PyGMO MDE-PBX algorithm the latter caught up and overtook the other at ~1000 executions. This corresponds it having better N$<$.015 values than DEA. In the 4 dimensional case Evolution Strategy type algorithms agian outpreformed Swarm type algorithms.
+For this problem the PyGMO DE, jDE and inspyred PSO algorithms essentially stalled not effusively optimizing. The inspyred DEA and PyGMO MDE-PBX algorithms again performed better than their peers. Interestingly while the inspyred DEA algorithm initially converged than the PyGMO MDE-PBX algorithm the latter caught up and overtook the other at ~1000 executions. This corresponds it having better N$<$.015 values than DEA. In the 4 dimensional case Evolution Strategy type algorithms again out preformed Swarm type algorithms.
 
-Additionaly to those tests displayed numerous other one were made. All algorithms shown were also applied to the test problem with 5 and 6 dimensions. For 5 dimensions the DEA algorithm outperformed all others, however did not completeley converge within ~1000 executions. For the 6 dimensional case all optimization algrithms stalled. As there were a 10 different variants of differential evolution avaliable for the PyGMO library these were applied to the three dimensional test problem using these, and tuning their paramters, it is possible to achive performance on par with the inspyred differential evolution, however it is not possible to significantly outperform it. As MDE-PBX comes closest to the performance of the inspyred DEA algorthim it was tested if tuning the paramter of this algorithm caused it to perform better. Tuning the paramter however only increased peformance marginally. Finally a similar tuning experiment was done with the Swarm type algorithms, which were found to be fairly insensitve to their configuration parmaters as well.
+Additionally to those tests displayed numerous other one were made. All algorithms shown were also applied to the test problem with 5 and 6 dimensions. For 5 dimensions the DEA algorithm outperformed all others, however did not completely converge within ~1000 executions. For the 6 dimensional case all optimization algorithms stalled. As there were a 10 different variants of differential evolution available for the PyGMO library these were applied to the three dimensional test problem using these, and tuning their parameters, it is possible to achieve performance on par with the inspyred differential evolution, however it is not possible to significantly outperform it. As MDE-PBX comes closest to the performance of the inspyred DEA algorithm it was tested if tuning the parameter of this algorithm caused it to perform better. Tuning the parameter however only increased performance marginally. Finally a similar tuning experiment was done with the Swarm type algorithms, which were found to be fairly insensitive to their configuration parameters as well.
 
-From the test shown, as well as the additional one performed the insypred DEA algorithm was chosen to be applied to the experiment because of its fast covergance and good performance for all the test problem dimensions evaulated. This algorithm then used to do optimization directly on the experiment.
+From the test shown, as well as the additional one performed the inspyred DEA algorithm was chosen to be applied to the experiment because of its fast convergence and good performance for all the test problem dimensions evaluated. This algorithm then used to do optimization directly on the experiment.
 
 \chapter{Appendix}
 
-\section{Test Problem Paramters}
+\section{Test Problem Parameters}
 \label{sec:param}
 
-Unless otherwise specified the optimization was run using the following parmaters.
+Unless otherwise specified the optimization was run using the following parameters.
 
 \begin{description}
-\item[Problem gaussian width] $\sigma   = 0.1 $ 
+\item[Problem Gaussian width] $\sigma   = 0.1 $ 
 \item[Position noise]         $\sigma_p = 0.05$ .
 \item[Amplitude noise]        $\sigma_a = 0.2 $ .
-\item[Backgorund noise]       $\sigma_d = 0.1 $ .
+\item[Background noise]       $\sigma_d = 0.1 $ .
 \item[Dimension]           $n=3\; n \in [0,1,\dots,6]$
 \item[Bounds]              $x_i \in [0,1]\; \forall i \in \{0,\dots,n\}$
 \end{description}
