@@ -211,7 +211,7 @@ The application of optimization directly to the Rydber experiment posed a number
 \section{Test Function}
 In order to evaluate the different algorithms that are avaliable a mathematical test problem was formulated. This problem could then be evaluated by computer allowing for the large number of evaluations needed to compare the algorithm with different paramaters and compare the results to other algorithms. In order to make this comparison meaningfull one needs to choose a test problem that matches the actual experiment as closley as possible, to do this a $n$ dimensional Gaussian was choosen.
 
-To further increase similarity with the experiment three sources of noise were added: measurement noise affecting the amplitude of the function($\sigma_a$), backgorund noise added to the fucntion($\sigma_b$) and noise in the parameters that were passed to the function$\sigma_p$. 
+To further increase similarity with the experiment three sources of noise were added: measurement noise affecting the amplitude of the function($\sigma_a$), backgorund noise added to the fucntion($\sigma_b$) and noise in the parameters/position that were passed to the function $\sigma_p$. 
 
 \[g(x_i,\sigma) = e^{\frac{(x_i^*-x_i)^2}{2\sigma}}\]
 \[G(\mathbf{x},\sigma) = \prod_{i=1}^n g(x_i, \sigma)\]
@@ -224,30 +224,26 @@ As we know only little about the problem landscape of the actual experimental pa
 
 Algorithms from different sources were used in the comparison. Two different optimization libraries were used, first the  "Parallel Global Multiobjective Optimizer"\cite{pygmo} of which the Python interface is named PyGMO and secondly the "inspyred"\cite{inspyred} library. Many optimization routines are published only as Maltab code, in these cases the algorithms were applied the the same test problem using Matlab.
 
-In order to compare the algorithms each one was run on to the test problem described 50 times, being allowed to do 900 evaluations of the test function. The results werge then graphen. 
-
-
-
-The algorithms were grouped into three categories and compared with each other. The comparison was based on repeatedly applying the optimization algorithm to the problem 50 times. Four different statistics are shown 
+In order to compare the algorithms they were all repeatedly applied to the test function using the paraters show in \ref{sec:param}. The algorithms were run independently 100 times and the following statistics were collected to evaluate the algorithm performance.
 
 \begin{description}
-\item[best] The median, over all runs, of the best value of each run found so far.
-\item[N$<$-1] The fraction of algorithms have found a value less than negative one.
-\item[Distance] The distance from the global optimum for each evaluation.
-\item[Std. Dev] The standard deviation of the best values found so far.
-
+\item[Best] The median, over all runs, of the best value of each run found so far.
+\item[N$<$-1] The fraction of algorithms that have found a value less than negative one.
+\item[Distance] The median over all runs, of the squared distance, in paramter space,  from the global optimum.
+\item[N$<$.015] The fraction of algorithms that have median squared distance valuess less that $0.015$.
 \end{description}
 
-Ideally we a looking for an algorithm that will converge often in a relativley short ammount of time, as seen in the "N$<$-1" plot. Additionally this covergence should be due to the fact that the algorithm is converging on the global optimum not because of the gaussian noise, as seen in the "Distance" plot. Then upon convering the algorithm should find a value lower than -1 due to the amplitude and background noise, as seen in the "Best" plot. The plots are shown in log-lin scaling because the convergence.
+The best value returned so far is the most direct way to measure the performance of the algorithm, for this value, as well as the distance, the median was chosen because it is less suceptible to outliers than the average. In to see how well the population of algorithms we wanted to have a sucess rate, as returning a value less than -1 was entierley due to noise we chose to count the number of algorithms that had achived this.
 
+The problem with looking at the fitness value returned is that since it is influenced by noise we may not be finding the actual minimum of the the problem that we are trying to optimize, merley lucky values. To prevent this one can look at the distance from the optimum in corrdinate space. First we consider the median, over all runs, distance in corrdinate space, depsite having considerable jitter this variable still gives a good indication of population state. The jitter results from the median being taken "randomly" from the population, meaing the population diversity is present as well as the diversity between the different runs. A  more direct way is counting the number of algorithms where the paramter is within some distance of the optimum. This is done by the $N<.015$ statistic.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.9\linewidth]{Images/3D_EA_hard.pdf}
 \vspace{0.5cm}
 \includegraphics[width=0.9\linewidth]{Images/3D_Swarm_hard.pdf}
-\caption{Evolutionary Algorithms applied to 3 Dimensional Gaussian}
-\label{fig: 3d_ea_hard}
+\caption{Selection of optimization algorithms applied to 3 dimensional test problem. Evolution Strategy and Swarm type algorithms shown on top and bottom respectivley.}
+\label{fig: 3d_hard}
 \end{figure}
 
 \begin{figure}[htb]
@@ -255,23 +251,41 @@ Ideally we a looking for an algorithm that will converge often in a relativley s
 \includegraphics[width=0.9\linewidth]{Images/4D_EA_hard.pdf}
 \vspace{0.5cm}
 \includegraphics[width=0.9\linewidth]{Images/4D_Swarm_hard.pdf}
-\caption{Swarm Algorithms applied to 4 Dimensional Gaussian}
-\label{fig: best hard}
+\caption{Selection of optimization algorithms applied to 4 dimensional test problem.Evolution Strategy and Swarm type algorithms shown on top and bottom respectivley.}
+\label{fig: 4d_hard}
 \end{figure}
 
+\subsection{Why choose DEA?}
+In these the three dimensional calse\ref{fig: 3d_hard} we see that all algorithms converge within the 900 executions that were given. Of the Swarm type algorithms all algorithms have similar performance with the PyGMO PSO algorithm performing best and Bee Colony Optimization performing worst, interstingly the Bee Colony Optimization does not seem to create any kind of population convergence when looking at the distance statistic. Evolution Strategy type algorithms performed better than Swarm type algorithms. Within this group the inspyred DEA and PyGMO MDE-PBX algorithms performed better than their peers with the inspyred DEA algorithm converging more quickly by about 100 executions. Interestingly N$<$.015 statistic of the DEA algorithm seems to level off at 0.6, something that does not happen with MDE-PBX, indicating that some population diversity always remains with this algorithm.
 
+As all algorithms converged the optimization algorithms were applied to a 4 dimensional test problem \ref{fig: 4d_hard}. The difficulty of the problem increases substantially with each dimension, in a nonlinear fasion, even when one considers only the relative volumes of the seach space and test problem gaussians. Corresponding to this increase in difficulty the number of function evaluations were increased.
 
-other tests:
-5d and 6d(stops working)
-de all variants (3D)
-mde vary parameter on (4D)
+For this problem the PyGMO DE, jDE and inspyred PSO algorithms essentially stalled not effecively optimizing. The inspyred DEA and PyGMO MDE-PBX algorithms again performed better than their peers. Interstingly while the inspyred DEA algorithm initially converged than the PyGMO MDE-PBX algorithm the latter caught up and overtook the other at ~1000 executions. This corresponds it having better N$<$.015 values than DEA. In the 4 dimensional case Evolution Strategy type algorithms agian outpreformed Swarm type algorithms.
 
+Additionaly to those tests displayed numerous other one were made. All algorithms shown were also applied to the test problem with 5 and 6 dimensions. For 5 dimensions the DEA algorithm outperformed all others, however did not completeley converge within ~1000 executions. For the 6 dimensional case all optimization algrithms stalled. As there were a 10 different variants of differential evolution avaliable for the PyGMO library these were applied to the three dimensional test problem using these, and tuning their paramters, it is possible to achive performance on par with the inspyred differential evolution, however it is not possible to significantly outperform it. As MDE-PBX comes closest to the performance of the inspyred DEA algorthim it was tested if tuning the paramter of this algorithm caused it to perform better. Tuning the paramter however only increased peformance marginally. Finally a similar tuning experiment was done with the Swarm type algorithms, which were found to be fairly insensitve to their configuration parmaters as well.
+
+From the test shown, as well as the additional one performed the insypred DEA algorithm was chosen to be applied to the experiment because of its fast covergance and good performance for all the test problem dimensions evaulated. This algorithm then used to do optimization directly on the experiment.
 
 \chapter{Appendix}
 
+\section{Test Problem Paramters}
+\label{sec:param}
+
+Unless otherwise specified the optimization was run using the following parmaters.
+
+\begin{description}
+\item[Problem gaussian width] $\sigma   = 0.1 $ 
+\item[Position noise]         $\sigma_p = 0.05$ .
+\item[Amplitude noise]        $\sigma_a = 0.2 $ .
+\item[Backgorund noise]       $\sigma_d = 0.1 $ .
+\item[Dimension]           $n=3\; n \in [0,1,\dots,6]$
+\item[Bounds]              $x_i \in [0,1]\; \forall i \in \{0,\dots,n\}$
+\end{description}
+
+
 \section{List of Optimization Algorithms Considered}
 
-A list of all the algorithms that were applied to the test problem, not all of these have been included in the comparison graphs they performed badly.
+A list of all the algorithms that were applied to the test problem. Those not included in the comparison were omitted because they performed badly.
 
 \begin{table}
     \begin{tabular}{|l|l|l|}
